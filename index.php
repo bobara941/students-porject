@@ -5,42 +5,7 @@
 		<script src="jquery.min.js"></script>
 		<link rel="stylesheet" href="css/font-awesome.min.css">
 		<!--  -->
-		<script>
-		function confirmDelete(delUrl) {
-			if (confirm("Сигурни ли сте, че искате да изтриете този студент")) {
-					document.location = delUrl;
-			}
-		}
-			$(document).ready(function() {
-				$('#search_text').keyup(function() {
-					var txt = $(this).val();
-					if (txt != '') {
-						$.ajax({
-							url:"fetch.php",
-							method:"post",
-							data:{search:txt},
-							dataType:"text",
-							success:function(data) {
-								$('#result').html(data);
-							}
-						});
-					}
-					else {
-						$('#result').html('');
-					}
-				});
-
-				$('#tst th').click(function() {
-					if ($(this).hasClass("fa fa-caret-down")) {
-						$(this).removeClass("fa fa-caret-down").addClass("fa fa-caret-up");
-					}
-					else {
-						$(this).removeClass("fa fa-caret-up").addClass("fa fa-caret-down");
-					}
-				});
-				
-			});
-		</script>
+		<script src="myscript.js"></script>
 		<style type="text/css">
 			.container #search_text {
 				margin-left: 430px;

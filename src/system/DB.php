@@ -1,4 +1,5 @@
 <?php
+	
 
 class DB {
 
@@ -50,5 +51,13 @@ class DB {
 		return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function getDatabaseConnection() {
+		return $this->dbh;
+	}
+ 
+	public function fetchAllNum() {
+		$this->execute();
+		return $this->stmt->fetchAll(PDO::FETCH_NUM);
+	}
 
 }
