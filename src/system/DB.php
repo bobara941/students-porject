@@ -11,6 +11,7 @@ class DB {
 			try {
 				$this->dbh = new PDO('mysql:host=localhost;dbname=first_project', 'root', 'qwerty123');
 				$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				$this->dbh->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES utf8');
 			}
 			catch (PDOException $e) {
 				$this->error = $e->getMessage();
@@ -23,6 +24,7 @@ class DB {
 		$this->stmt = $this->dbh->prepare($query);
 	}
 
+	// Bind function
 	public function bind($param, $value, $type = null) {
 		if (is_null($type)) {
 			switch (true) {
@@ -41,6 +43,7 @@ class DB {
 			$this->stmt->bindValue($param, $value, $type);
 		}
 	}
+
 
 	public function execute() {
 		return $this->stmt->execute();
