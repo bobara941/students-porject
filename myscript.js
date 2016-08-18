@@ -1,8 +1,4 @@
-function confirmDelete(delUrl) {
-			if (confirm("Сигурни ли сте, че искате да изтриете този студент")) {
-					document.location = delUrl;
-			}
-		}
+
 			$(document).ready(function() {
 				$('#search_text').keyup(function() {
 					var txt = $(this).val();

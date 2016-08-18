@@ -22,15 +22,15 @@ class Student {
 
 	}
 
-	public function deleteStudent($delName) {
-		$this->dbc->query("DELETE FROM students WHERE ime=:delnm");
-		$this->dbc->bind(':delnm', $delName);
+	public function deleteStudent($delId) {
+		$this->dbc->query("DELETE FROM students WHERE fak_nom=:delId");
+		$this->dbc->bind(':delId', $delId);
 		$this->dbc->execute();
 	}
 
 	//TODO WHERE fak_nom
-	public function updateStudent($fak_nom, $ime, $fam, $spec, $course, $grupa) {
-		$this->dbc->query("UPDATE students SET fak_nom=:fn, ime=:first, fam=:last, spec=:sp, course=:cr, grupa=:gr WHERE fak_nom='654678'");
+	public function updateStudent($fak_nom, $ime, $fam, $spec, $course, $grupa, $id) {
+		$this->dbc->query("UPDATE students SET fak_nom=:fn, ime=:first, fam=:last, spec=:sp, course=:cr, grupa=:gr WHERE fak_nom='$id'");
 		$this->dbc->bind(':fn', $fak_nom);
 		$this->dbc->bind(':first', $ime);
 		$this->dbc->bind(':last', $fam);
