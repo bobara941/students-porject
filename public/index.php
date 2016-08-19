@@ -1,48 +1,15 @@
 <?php
 
+/*
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
+*/
 
-// TODO
+// TODO AUTOLOADING
 define("AP_SITE", realpath(dirname(__FILE__)));
 
-/*function validateStudent($firstName, $lastName, $fakNom, $specialty, $course, $group) {
-	try {
-		if (empty($firstName)) {
-			throw new Exception('Моля въведете Име.');
-		}
-		if (empty($lastName)) {
-			throw new Exception('Моля въведете Фамилия.');
-		}
-		if (empty($fakNom)) {
-			throw new Exception('Моля въведете Факултетен номер.');
-		}
-		if (strlen($fakNom) > 6 || strlen($fakNom) < 6) {
-			throw new Exception('Факултетния номер трябва да бъде дълъг 6 цифри');
-		}
-		if (empty($specialty)) {
-			throw new Exception('Моля въведете Специалност.');
-		}
-		if(empty($course)) {
-			throw new Exception('Моля въведете Курс.');
-		}
-		if(empty($group)) {
-			throw new Exception('Моля въведете Група.');
-		}
-
-		return [
-			'code' => 'ok',
-			'message' => 'success'
-		];
-	}
-	catch(Exception $e) {
-		return [
-			'code' => 'error',
-			'message' => $e->getMessage()
-		];
-	}
-}*/
-
+// Global variable used for sorting
+$current_sort_order = 'ASC';
 
 require_once '../src/system/DB.php';
 require_once '../src/models/Student.php';
@@ -50,57 +17,103 @@ require_once '../src/models/Student.php';
 $mydb = new DB();
 $StudentModel = new Student($mydb);
 
-/*if($_GET['action'] == 'students-list') {
-
-	$allStudents = $StudentModel->getAllStudents();
-
-	include AP_SITE.'/../src/views/students-list.tpl';
-}*/
 // DELETE
 if ($_GET['action'] == 'delete' && isset($_GET['id'])) {
 	$StudentModel->deleteStudent($_GET['id']);
 	header("Location: /public/index.php");
 }
+
+// UPDATE STUDENT
+if ($_GET['action'] == 'update') {
+	
+	if (isset($_GET['id'])) {	// Checking for $_GET value
+		$stdId = $_GET['id'];
+	}
+
+	// Sets action for the students-form template
+	$act = "update&id=".$_GET["id"];
+
+	$std = $StudentModel->getStudent();
+	
+	include AP_SITE.'/../src/views/students-form.tpl';
+
+	// If the form is submitted
+	if ($_POST['formSubmit']) {
+		
+		$result = $StudentModel->updateStudent();
+
+		if ($result['code'] == 'ok') {
+			header("Location: /public/index.php");
+		}
+		else {
+			echo $result['message'];
+		}
+	}
+}
+
+// ADD STUDENT
 if ($_GET['action'] == 'insert') {
-	include AP_SITE.'/../src/views/students-form.tpl';
-}
-if ($_GET['action'] == 'inserted') {
-	if ($_POST['formSubmit']) {
-		$firstName = $_POST['ime'];
-		$lastName = $_POST['fam'];
-		$fakNom = intval($_POST['fn']);
-		$specialty = $_POST['spec'];
-		$course = intval($_POST['kurs']);
-		$group = $_POST['grupa'];
 
-		// Insert the student into DB
-		$StudentModel->addStudent($fakNom, $firstName, $lastName, $specialty, $course, $group);
-		header("Location: /public/index.php");
+	// Sets action for the students-form template
+	$act = "insert";
+
+	include AP_SITE.'/../src/views/students-form.tpl';
+
+	// Getting the user input
+	$firstName = trim($_POST['ime']);
+	$lastName = trim($_POST['fam']);
+	$fakNom = trim(intval($_POST['fn']));
+	$specialty = trim($_POST['spec']);
+	$course = trim(intval($_POST['kurs']));
+	$group = trim($_POST['grupa']);
+
+	// If the form is submitted
+	if ($_POST['formSubmit']) {
+
+		$result = $StudentModel->addStudent();
+
+		if ($result['code'] == 'ok') {
+			header("Location: /public/index.php");
+		}
+		else {
+			echo $result['message'];
+		}
 	}
 }
-// TODO
-/*if ($_GET['action'] == 'update' && isset($_GET['id'])) {
-	$id = $_GET['id'];
-	include AP_SITE.'/../src/views/students-form.tpl';
-	if ($_POST['formSubmit']) {
-		$firstName = $_POST['ime'];
-		$lastName = $_POST['fam'];
-		$fakNom = intval($_POST['fn']);
-		$specialty = $_POST['spec'];
-		$course = intval($_POST['kurs']);
-		$group = $_POST['grupa'];
+// SORT
+if ($_GET['action'] == 'sort') {
 
-		// Insert the student into DB
-		$StudentModel->updateStudent($fakNom, $firstName, $lastName, $specialty, $course, $group, $id);
-		header("Location: /public/index.php");
+	if (isset($_GET['sort'])) {
+		$sort = $_GET['sort'];	// Getting the sort type
 	}
-}*/
+	
+	// Setting the sort by
+	if (isset($_GET['sort_order'])) {
+		if ($_GET['sort_order'] == 'DESC') {
+			$sort_order = 'ASC';
+			$sort_css_class = 'down';
+			$current_sort_order = 'DESC';
+		}
+		else {
+			$sort_order = 'DESC';
+			$sort_css_class = 'up';
+			$current_sort_order = 'ASC';
+		}
+	}
+
+	$allStudents = $StudentModel->orderStudents($sort, $current_sort_order);
+
+	include AP_SITE.'/../src/views/students-list.tpl';
+
+}
+
+// Show default case
 else {
 	if (!isset($_GET['action'])) {
 		$allStudents = $StudentModel->getAllStudents();
 
 		include AP_SITE.'/../src/views/students-list.tpl';
-	}	
+	}
 }
 
 

@@ -54,6 +54,11 @@ class DB {
 		return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function fetchRow() {
+		$this->execute();
+		return $this->stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
 	public function getDatabaseConnection() {
 		return $this->dbh;
 	}
