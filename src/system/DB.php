@@ -1,6 +1,7 @@
 <?php
 	
 
+
 class DB {
 
 	private $dbh;
@@ -9,9 +10,9 @@ class DB {
 
 	public function __construct() {
 			try {
-				$this->dbh = new PDO('mysql:host=localhost;dbname=first_project', 'root', 'qwerty123');
+				$this->dbh = new PDO('mysql:host=localhost;dbname=first_project;charset=utf8', 'root', 'qwerty123');
 				$this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				$this->dbh->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, 'SET NAMES utf8');
+				$this->dbh->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES utf8");
 			}
 			catch (PDOException $e) {
 				$this->error = $e->getMessage();

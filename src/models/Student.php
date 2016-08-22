@@ -2,6 +2,8 @@
 
 //require_once '../system/DB.php';
 
+
+
 class Student {
 
 	private $dbc;

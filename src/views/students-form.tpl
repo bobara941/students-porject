@@ -2,9 +2,10 @@
 <html>
 <head>
 		<title>My First Project</title>
+		<link rel="stylesheet" href="../../public/css/mystyle.css">
 		<script src="../public/js/jquery.min.js"></script>
-		<!-- Client Side Validation Here -->
-
+		<!-- Javascript validation -->
+		<script src="../../public/js/validateForm.js"></script>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -16,7 +17,7 @@
 	</head>
 <body>
 
-<form action="../public/index.php?action=<?php echo $act;?>" method="post">
+<form action="../public/index.php?action=<?php echo $act;?>" method="post" name="myForm">
 		<input type="hidden" name="formSubmit" value="1">
 		<div class="form-group">
 			<label for="ime">Име:</label>
@@ -43,7 +44,7 @@
 			<input type="text" class="form-control" name="grupa" id="grupa" value="<?php if (isset($_POST['grupa'])) {echo $_POST['grupa'];} else {echo $std['grupa'];}?>">
 		</div>
 
-		<button type="submit" class="btn btn-default">Напред</button>
+		<button type="submit" id="sbt" class="btn btn-default">Напред</button>
 </form>
 
 </body>

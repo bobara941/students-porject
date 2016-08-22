@@ -11,8 +11,11 @@ define("AP_SITE", realpath(dirname(__FILE__)));
 // Global variable used for sorting
 $current_sort_order = 'ASC';
 
-require_once '../src/system/DB.php';
-require_once '../src/models/Student.php';
+/*require_once '../src/system/DB.php';
+require_once '../src/models/Student.php';*/
+
+// AUTOLOADING
+require_once '../src/views/Bootstrap.php';
 
 $mydb = new DB();
 $StudentModel = new Student($mydb);
@@ -58,14 +61,6 @@ if ($_GET['action'] == 'insert') {
 	$act = "insert";
 
 	include AP_SITE.'/../src/views/students-form.tpl';
-
-	// Getting the user input
-	$firstName = trim($_POST['ime']);
-	$lastName = trim($_POST['fam']);
-	$fakNom = trim(intval($_POST['fn']));
-	$specialty = trim($_POST['spec']);
-	$course = trim(intval($_POST['kurs']));
-	$group = trim($_POST['grupa']);
 
 	// If the form is submitted
 	if ($_POST['formSubmit']) {
