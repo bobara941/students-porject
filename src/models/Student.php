@@ -1,19 +1,17 @@
 <?php
 
-//require_once '../system/DB.php';
-
-
-
 class Student {
 
 	private $dbc;
 
-	public function __construct($db) {
+	public function __construct($db)
+	{
 		$this->dbc = $db;
 	}
 
-	private function validateStudent($firstName, $lastName, $fakNom, $specialty, $course, $group) {
-		try {
+	private function validateStudent($firstName, $lastName, $fakNom, $specialty, $course, $group)
+	{
+	    try {
 			if (empty($firstName)) {
 				throw new Exception('Моля въведете Име.');
 			}
@@ -49,97 +47,122 @@ class Student {
 		}
 	}
 
-	public function addStudent() {
-
-		// Getting user input
-		$firstName = trim($_POST['ime']);
-		$lastName = trim($_POST['fam']);
-		$fakNom = trim(intval($_POST['fn']));
-		$specialty = trim($_POST['spec']);
-		$course = trim(intval($_POST['kurs']));
-		$group = trim($_POST['grupa']);
-
-		// Validating user input
-		$result = $this->validateStudent($firstName, $lastName, $fakNom, $specialty, $course, $group);
-
-		if ($result['code'] == 'ok') {
-			$this->dbc->query("INSERT INTO students (fak_nom, ime, fam, spec, course, grupa) VALUES(:fn, :first, :last, :sp, :cr, :gr)");
-			$this->dbc->bind(':fn', $fakNom);
-			$this->dbc->bind(':first', $firstName);
-			$this->dbc->bind(':last', $lastName);
-			$this->dbc->bind(':sp', $specialty);
-			$this->dbc->bind(':cr', $course);
-			$this->dbc->bind(':gr', $group);
-			$this->dbc->execute();
-		}
-
-		return $result;
-	}
-
-	public function deleteStudent() {
-
-		// Getting user input TODO
-		$id = $_GET['id'];
-
-		$this->dbc->query("DELETE FROM students WHERE fak_nom=:delId");
-		$this->dbc->bind(':delId', $id);
-		$this->dbc->execute();
-	}
-
-	public function updateStudent() {
-		// Getting user input
+	private function getUserInput()
+	{
 		$id = $_GET['id'];
 		$firstName = trim($_POST['ime']);
 		$lastName = trim($_POST['fam']);
 		$fakNom = trim(intval($_POST['fn']));
 		$specialty = trim($_POST['spec']);
 		$course = trim(intval($_POST['kurs']));
-		$group = trim($_POST['grupa']);
+		$group = trim(intval($_POST['grupa']));
+		// Assigning user input into associative array
+		$studData = array(
+			'id' => $id,
+			'firstName' => $firstName,
+			'lastName' => $lastName,
+			'fakNom' => $fakNom,
+			'specialty' => $specialty,
+			'course' => $course,
+			'group' => $group
+		);
+		return $studData;
+	}
+
+	public function addStudent()
+	{
+		// Getting the user input
+		$studData = $this->getUserInput();
 
 		// Validating user input
-		$result = $this->validateStudent($firstName, $lastName, $fakNom, $specialty, $course, $group);
+		$result = $this->validateStudent($studData['firstName'], $studData['lastName'], $studData['fakNom'], $studData['specialty'], $studData['course'], $studData['group']);
 
 		if ($result['code'] == 'ok') {
-			$this->dbc->query("UPDATE students SET fak_nom=:fn, ime=:first, fam=:last, spec=:sp, course=:cr, grupa=:gr WHERE fak_nom='$id'");
-			$this->dbc->bind(':fn', $fakNom);
-			$this->dbc->bind(':first', $firstName);
-			$this->dbc->bind(':last', $lastName);
-			$this->dbc->bind(':sp', $specialty);
-			$this->dbc->bind(':cr', $course);
-			$this->dbc->bind(':gr', $group);
+			$this->dbc->preparedQuery("INSERT INTO students (fak_nom, ime, fam, spec, course, grupa) VALUES(:fn, :first, :last, :sp, :cr, :gr)");
+			$this->dbc->bind(':fn', $studData['fakNom']);
+			$this->dbc->bind(':first', $studData['firstName']);
+			$this->dbc->bind(':last', $studData['lastName']);
+			$this->dbc->bind(':sp', $studData['specialty']);
+			$this->dbc->bind(':cr', $studData['course']);
+			$this->dbc->bind(':gr', $studData['group']);
 			$this->dbc->execute();
 		}
 
 		return $result;
 	}
 
-	public function getStudent() {
+	public function deleteStudent()
+	{
 
-		// Getting from user input
-		$stdId = $_GET['id'];
+		// Getting student ID
+		$studData = $this->getUserInput();
 
-		$this->dbc->query("SELECT * FROM students WHERE fak_nom=:fn");
-		$this->dbc->bind(':fn', $stdId);
+		$this->dbc->preparedQuery("DELETE FROM students WHERE fak_nom=:deleteID");
+		$this->dbc->bind(':deleteID', $studData['id']);
 		$this->dbc->execute();
-		$row = $this->dbc->fetchRow();
+	}
+
+	public function updateStudent()
+	{
+		// Getting user input
+		$studData = $this->getUserInput();
+
+		// Validating user input
+		$result = $this->validateStudent($studData['firstName'], $studData['lastName'], $studData['fakNom'], $studData['specialty'], $studData['course'], $studData['group']);
+
+		if ($result['code'] == 'ok') {
+			$this->dbc->preparedQuery("UPDATE students SET fak_nom=:fn, ime=:first, fam=:last, spec=:sp, course=:cr, grupa=:gr WHERE fak_nom='".$studData['id']."'");
+			$this->dbc->bind(':fn', $studData['fakNom']);
+			$this->dbc->bind(':first', $studData['firstName']);
+			$this->dbc->bind(':last', $studData['lastName']);
+			$this->dbc->bind(':sp', $studData['specialty']);
+			$this->dbc->bind(':cr', $studData['course']);
+			$this->dbc->bind(':gr', $studData['group']);
+			$this->dbc->execute();
+		}
+
+		return $result;
+	}
+
+	public function getStudent()
+	{
+		// Getting student ID
+		$studData = $this->getUserInput();
+
+		$this->dbc->preparedQuery("SELECT * FROM students WHERE fak_nom=:fn");
+		$this->dbc->bind(':fn', $studData['id']);
+		$this->dbc->execute();
+		$row = $this->dbc->fetchRowAssoc();
 		return $row;
 	}
 
-	// TODO PREPARE THE STATEMENT LATER
-	public function orderStudents($sort, $sort_order) {
-		$this->dbc->query("SELECT * FROM students ORDER BY $sort $sort_order");
-		/*$this->dbc->bind(':sort', $sort);
-		$this->dbc->bind(':sort_order', $sort_order);*/
+	// 
+	public function getAllSortedStudents($sort, $sort_order)
+	{
+		$this->dbc->preparedQuery("SELECT * FROM students ORDER BY $sort $sort_order");
 		$this->dbc->execute();
-		$row = $this->dbc->resultset();
+		$row = $this->dbc->fetchAllAssoc();
 		return $row;
 	}
 
-	public function getAllStudents() {
-		$this->dbc->query("SELECT * FROM students");
+	public function getAllStudents()
+	{
+		$this->dbc->preparedQuery("SELECT * FROM students");
 		$this->dbc->execute();
-		$row = $this->dbc->resultset();
+		$row = $this->dbc->fetchAllAssoc();
 		return $row;
+	}
+
+	// TODO
+	public function getSearchedStudents() 
+	{
+		if ($_POST['search'] != NULL) {
+			$this->dbc->preparedQuery("SELECT * FROM students WHERE ime LIKE '%".$_POST["search"]."%' OR fam LIKE '%".$_POST["search"]."%'");
+			$this->dbc->execute();
+			$row = $this->dbc->fetchAllAssoc();
+			return $row;
+		}
+
 	}
 
 }

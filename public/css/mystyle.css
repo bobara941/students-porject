@@ -1,19 +1,95 @@
+body {
+	 font-family: 'Open Sans', arial;
+	 font-size: 16px;
+	 line-height: 1.4;
+	 color: #333;
+	 background: #fff;
+}
+
 .errors {
 	color: red;
 }
 
-#studTbl {
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 60px;
+.red {
+	color: red;
 }
 
-#studTbl a {
+#studTable {
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	width: 100%;
+	border: 1px solid black;
+	text-align: center;
+}
+
+#studTable td {
+	border: 1px solid #000;
+}
+
+#studTable th {
+	border: 1px solid #000;
+}
+
+#studTable a {
 	text-decoration: none;
 }
 /*TODO*/
-#insertStud {
+.insertStud {
+	display: inline-block;
+	float: right;
+	background: green;
+	padding: 10px;
+	text-align: center;
+	border-radius: 5px;
+	color: #FFF;
+	font-weight: bold;
 	text-decoration: none;
-	margin-left: 500px;
-	margin-top: 100px;
+	color: white;
+	margin-left: 20px;
+}
+
+#tableOutline:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+#tableOutline {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 60px;
+	text-align:center;
+	width:70%;
+}
+
+#search_text {
+	margin-left: 430px;
+	width: 400px;
+	font-size: 20px;
+}
+
+#showall {
+	position: relative;
+	height: 30px;
+	float: right;
+	margin-right: 200px;
+	display: inline-block;
+	background: green;
+	padding: 10px;
+	text-align: center;
+	border-radius: 4px;
+	color: #FFF;
+	font-weight: bold;
+	text-decoration: none;
+	color: white;
+}
+
+#showall a {
+	text-decoration: none;
+	color: white;
+	text-align: center;
 }

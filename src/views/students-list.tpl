@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>My First Project</title>
-		<script src="../public/js/jquery.min.js"></script>
-		<script src="../../public/js/deleteConfirmation.js"></script>
-		<link rel="stylesheet" href="css/font-awesome.min.css">
-		<link rel="stylesheet" href="css/mystyle.css">
-	</head>
-<body>
-<table id="studTbl" border="1px solid black" style="text-align:center;width:70%">
+<!-- Including CSS files -->
+<link rel="stylesheet" href="css/mystyle.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="css/mystyle.css">
+
+<div id="tableOutline">
+<table id="studTable">
 <tr>
 	<th><a href="../public/index.php?action=sort&sort=ime&sort_order=<?php echo $sort_order;?>">Име<?php if ($_GET['sort'] == 'ime') {?><i class="fa fa-caret-<?=$sort_css_class?>"></i><?php } ?></a></th>
 	<th><a href="../public/index.php?action=sort&sort=fam&sort_order=<?php echo $sort_order;?>">Фамилия<?php if ($_GET['sort'] == 'fam') {?><i class="fa fa-caret-<?=$sort_css_class?>"><?php } ?></a></th>
@@ -31,7 +27,12 @@
 
 </table>
 
-<a href="/public/index.php?action=insert" id="insertStud">Добавяне на студент</a>
+<?php if ($_GET['action'] != 'search-submit') { ?>
+<a href="/public/index.php?action=insert" class="insertStud">Добавяне на студент</a>
+<a href="/public/index.php" class="insertStud">Връщане към търсенето</a>
+<?php } ?>
 
-</body>
-</html>
+</div>
+<!-- Including JS files -->
+<script src="../public/js/jquery.min.js"></script>
+<script src="../../public/js/deleteConfirmation.js"></script>
